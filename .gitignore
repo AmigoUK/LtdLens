@@ -1,0 +1,22 @@
+node_modules/
+dist/
+coverage/
+
+# WXT build output
+.wxt/
+.output/
+
+# Wrangler local state and secrets
+.wrangler/
+.dev.vars
+.dev.vars.*
+!.dev.vars.example
+
+.env
+.env.*
+*.log
+*.tsbuildinfo
+
+.DS_Store
+._*
+test-results/

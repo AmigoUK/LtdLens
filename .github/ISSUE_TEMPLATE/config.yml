@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Project page
+    url: https://www.attv.uk
+    about: More about LtdLens and the other tools built here.
+  - name: Email
+    url: mailto:dev@attv.uk
+    about: For anything you would rather not raise in public.

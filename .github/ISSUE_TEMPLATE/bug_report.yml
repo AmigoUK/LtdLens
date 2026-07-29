@@ -1,0 +1,32 @@
+name: Bug report
+description: Something in the extension does not work as described.
+labels: [bug]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What did you do, what did you expect, and what happened instead?
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: LtdLens version
+      description: Shown in the footer of the settings page.
+    validations:
+      required: true
+
+  - type: input
+    id: chrome
+    attributes:
+      label: Chrome version
+      description: Paste from chrome://version
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        Please do not paste anything confidential. LtdLens collects no diagnostics of its own, so nothing has been sent to us — everything we know is what you choose to write here.

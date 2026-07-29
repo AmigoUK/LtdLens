@@ -1,0 +1,10 @@
+node_modules/
+dist/
+coverage/
+.wxt/
+.output/
+.wrangler/
+package-lock.json
+
+# Recorded upstream payloads — kept byte-identical to what the API returned.
+fixtures/src/companies-house/

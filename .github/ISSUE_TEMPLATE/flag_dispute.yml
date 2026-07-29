@@ -1,0 +1,43 @@
+name: Dispute a flag
+description: A flag LtdLens showed about a company is wrong, misleading or out of date.
+title: 'Flag dispute: '
+labels: [flag-dispute]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        LtdLens only ever reports facts taken from the public Companies House register, and every flag links to the record it came from. If a flag is wrong, either we have misread the register or the register itself is out of date — both matter, and both are worth reporting.
+
+        **If the register entry itself is wrong**, only Companies House can correct it. [Report an incorrect record to Companies House](https://www.gov.uk/government/organisations/companies-house/about/complaints-procedure) as well as telling us.
+
+  - type: input
+    id: company-number
+    attributes:
+      label: Company number
+      placeholder: '00445790'
+    validations:
+      required: true
+
+  - type: input
+    id: flag
+    attributes:
+      label: Which flag
+      description: The wording shown in the panel, e.g. "Accounts are overdue".
+    validations:
+      required: true
+
+  - type: textarea
+    id: why
+    attributes:
+      label: Why it is wrong
+      description: What does the register actually say, and where? A link to the specific Companies House page helps most.
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: LtdLens version
+      description: Shown in the footer of the settings page.
+    validations:
+      required: true

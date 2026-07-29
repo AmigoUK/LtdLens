@@ -1,0 +1,14 @@
+{
+  "name": "@ltdlens/shared",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "description": "Pure logic shared by the extension and the Worker: types, normalisers, flag engine, statutory interest.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  }
+}
