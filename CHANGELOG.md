@@ -9,6 +9,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _Nothing yet._
 
+## [0.0.4] — 2026-07-29
+
+### Added
+
+- The flag ruleset and the engine that runs it: ten rules covering terminal status, strike-off, overdue accounts and confirmation statements, young companies with no filing history, director churn, a recent move by a young company, a recent rename, outstanding charges, and the all-clear. 238 tests, including a golden run of all four fixtures with the clock frozen.
+- `docs/FLAG_RULES.md`, which is as much a legal-risk document as a specification. Every rule carries a **what this does not mean** line, because the gap between "accounts are overdue" and "this company is unreliable" is the gap between a verifiable statement and a solicitor's letter. It also records what was deliberately not built and why.
+- The engine runs in the browser at render time. A rule correction therefore ships with the extension and immediately fixes every cached report — no cache purge, no server deployment — and the reading stays the user's own, from a public record they asked for, rather than a verdict published from a server.
+
+### Changed
+
+- **Each rule declares the sources it needs, and a rule that could not run reports `not-checked` rather than `clear`.** This is the property the whole engine exists to guarantee. If the officer list fails to load, LtdLens says officer history was not assessed; it does not say the officers are fine. `all-clear` requires all four sources, so the reassuring "no red flags in the public record" cannot be produced from a partial one — tested, deliberately, against the healthiest fixture in the set, where a regression would be least likely to be noticed.
+- A rule may also report `'unknown'` when its source arrived but the field it needs is absent. A profile with no incorporation date cannot answer "is this company young?", and answering "no" would be a guess dressed as a finding.
+- Outstanding charges are `info` and never lift the summary. A charge is a lender taking security, which happens on every commercial loan, mortgage and asset finance agreement; treating it as concerning would flag most healthy trading companies in the country.
+- Flags carry i18n keys rather than rendered English, and every flag carries a required `sourceUrl` pointing at the specific Companies House page that evidences it — the filing history for an overdue account, the officer list for churn. Every claim is one click from its proof.
+
 ## [0.0.3] — 2026-07-29
 
 ### Added
@@ -65,7 +80,8 @@ _Nothing yet._
 - **The project is named LtdLens, not SafeToTrade.** The working title collided with `SAFETOTRADE LIMITED` (Companies House 14990998), an active UK company incorporated on 10 July 2023 that operates safetotrade.com as a food-safety trustmark and holds safetotrade.uk, .co.uk and .com. That is the same semantic space — a badge asserting a business can be trusted — so the collision is not merely a domain problem: passing off is arguable without any registered trade mark, and the Chrome Web Store removes extensions on a brand owner's complaint without a hearing. LtdLens was verified clean against Companies House, the .uk/.co.uk/.com registries and general web search before adoption. `verify-workspace.mjs` fails the build if the old name reappears in a package name.
 - TypeScript is pinned to `~5.9.3` rather than the current 7.0.2. `typescript-eslint@8.65.0` declares a peer range of `typescript >=4.8.4 <6.1.0`, and no stable line supports TypeScript 7 yet. Losing type-checked lint rules — the mechanism enforcing everything described above — to gain a compiler version is the wrong trade. Revisit when typescript-eslint ships stable TypeScript 7 support.
 
-[Unreleased]: https://github.com/AmigoUK/LtdLens/compare/v0.0.3...HEAD
+[Unreleased]: https://github.com/AmigoUK/LtdLens/compare/v0.0.4...HEAD
+[0.0.4]: https://github.com/AmigoUK/LtdLens/compare/v0.0.3...v0.0.4
 [0.0.3]: https://github.com/AmigoUK/LtdLens/compare/v0.0.2...v0.0.3
 [0.0.2]: https://github.com/AmigoUK/LtdLens/compare/v0.0.1...v0.0.2
 [0.0.1]: https://github.com/AmigoUK/LtdLens/releases/tag/v0.0.1

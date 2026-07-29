@@ -1,7 +1,7 @@
 {
   "name": "@ltdlens/shared",
   "private": true,
-  "version": "0.0.3",
+  "version": "0.0.4",
   "type": "module",
   "description": "Pure logic shared by the extension and the Worker: types, normalisers, flag engine, statutory interest.",
   "exports": {

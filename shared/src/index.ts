@@ -96,6 +96,15 @@ export {
 export type { SnapshotInputs, SourceResult } from './normalise/snapshot.js';
 export { UnusableProfileError, composeSnapshot, normaliseSearch } from './normalise/snapshot.js';
 
+export type { RuleDefinition, RuleOutcome } from './flags/rules.js';
+export { LEVEL_ORDER, RULES, RULES_BY_ID, RULESET_VERSION } from './flags/rules.js';
+export {
+  evaluateSnapshot,
+  evaluateSnapshotAt,
+  notCheckedDetail,
+  overallSeverity,
+} from './flags/engine.js';
+
 export type { RatePeriod } from './rates/table.js';
 export {
   RATE_PERIODS,
