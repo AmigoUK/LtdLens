@@ -1,0 +1,33 @@
+{
+  "etag": "f1f2f3f4f5f6",
+  "filing_history_status": "filing-history-available",
+  "total_count": 2,
+  "items_per_page": 25,
+  "start_index": 0,
+  "kind": "filing-history",
+  "items": [
+    {
+      "transaction_id": "OTkwMDAwMDMx",
+      "category": "address",
+      "date": "2026-06-30",
+      "description": "change-registered-office-address-company-with-date-old-address-new-address",
+      "description_values": {
+        "change_date": "2026-06-30",
+        "old_address": "71-75 Shelton Street, London",
+        "new_address": "3 Startup Lane, London"
+      },
+      "type": "AD01",
+      "pages": 1,
+      "links": { "self": "/company/99000003/filing-history/OTkwMDAwMDMx" }
+    },
+    {
+      "transaction_id": "OTkwMDAwMDMy",
+      "category": "incorporation",
+      "date": "2026-02-16",
+      "description": "incorporation-company",
+      "type": "NEWINC",
+      "pages": 12,
+      "links": { "self": "/company/99000003/filing-history/OTkwMDAwMDMy" }
+    }
+  ]
+}

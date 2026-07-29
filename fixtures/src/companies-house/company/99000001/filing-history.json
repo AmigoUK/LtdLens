@@ -1,0 +1,51 @@
+{
+  "etag": "d1d2d3d4d5d6",
+  "filing_history_status": "filing-history-available",
+  "total_count": 24,
+  "items_per_page": 25,
+  "start_index": 0,
+  "kind": "filing-history",
+  "items": [
+    {
+      "transaction_id": "OTkwMDAwMDEx",
+      "category": "gazette",
+      "date": "2026-07-14",
+      "description": "gazette-notice-compulsory",
+      "type": "GAZ1",
+      "pages": 1,
+      "links": { "self": "/company/99000001/filing-history/OTkwMDAwMDEx" }
+    },
+    {
+      "transaction_id": "OTkwMDAwMDEy",
+      "category": "officers",
+      "date": "2026-06-14",
+      "description": "termination-director-company-with-name-termination-date",
+      "description_values": {
+        "officer_name": "OKONKWO, Grace",
+        "termination_date": "2026-06-14"
+      },
+      "type": "TM01",
+      "pages": 1,
+      "links": { "self": "/company/99000001/filing-history/OTkwMDAwMDEy" }
+    },
+    {
+      "transaction_id": "OTkwMDAwMDEz",
+      "category": "mortgage",
+      "date": "2026-03-25",
+      "description": "create-charge-with-deed-with-charge-number",
+      "type": "MR01",
+      "pages": 8,
+      "links": { "self": "/company/99000001/filing-history/OTkwMDAwMDEz" }
+    },
+    {
+      "transaction_id": "OTkwMDAwMDE0",
+      "category": "accounts",
+      "date": "2025-01-20",
+      "description": "accounts-with-accounts-type-total-exemption-full",
+      "description_values": { "made_up_date": "2024-04-30" },
+      "type": "AA",
+      "pages": 9,
+      "links": { "self": "/company/99000001/filing-history/OTkwMDAwMDE0" }
+    }
+  ]
+}

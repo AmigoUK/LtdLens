@@ -1,0 +1,42 @@
+{
+  "company_name": "NEWCO VENTURES LIMITED",
+  "company_number": "99000003",
+  "company_status": "active",
+  "type": "ltd",
+  "jurisdiction": "england-wales",
+  "date_of_creation": "2026-02-16",
+  "can_file": true,
+  "sic_codes": ["70229"],
+  "registered_office_address": {
+    "address_line_1": "3 Startup Lane",
+    "locality": "London",
+    "postal_code": "EC1A 1BB",
+    "country": "England"
+  },
+  "registered_office_is_in_dispute": false,
+  "undeliverable_registered_office_address": false,
+  "accounts": {
+    "accounting_reference_date": { "day": 28, "month": 2 },
+    "next_accounts": {
+      "due_on": "2027-11-16",
+      "overdue": false,
+      "period_start_on": "2026-02-16",
+      "period_end_on": "2027-02-28"
+    },
+    "next_due": "2027-11-16",
+    "next_made_up_to": "2027-02-28",
+    "overdue": false
+  },
+  "confirmation_statement": {
+    "next_due": "2027-03-01",
+    "next_made_up_to": "2027-02-15",
+    "overdue": false
+  },
+  "has_charges": false,
+  "has_insolvency_history": false,
+  "links": {
+    "self": "/company/99000003",
+    "filing_history": "/company/99000003/filing-history",
+    "officers": "/company/99000003/officers"
+  }
+}

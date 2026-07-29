@@ -1,0 +1,29 @@
+{
+  "etag": "c1c2c3c4c5c6",
+  "total_count": 2,
+  "satisfied_count": 0,
+  "part_satisfied_count": 1,
+  "unfiletered_count": 2,
+  "items": [
+    {
+      "charge_number": 2,
+      "charge_code": "990000010002",
+      "status": "outstanding",
+      "created_on": "2026-03-18",
+      "delivered_on": "2026-03-25",
+      "classification": { "type": "charge-description", "description": "A registered charge" },
+      "persons_entitled": [{ "name": "SHORT TERM FINANCE LIMITED" }],
+      "links": { "self": "/company/99000001/charges/ccc001" }
+    },
+    {
+      "charge_number": 1,
+      "charge_code": "990000010001",
+      "status": "part-satisfied",
+      "created_on": "2023-08-01",
+      "delivered_on": "2023-08-09",
+      "classification": { "type": "charge-description", "description": "A registered charge" },
+      "persons_entitled": [{ "name": "MIDLANDS COMMERCIAL BANK PLC" }],
+      "links": { "self": "/company/99000001/charges/ccc002" }
+    }
+  ]
+}

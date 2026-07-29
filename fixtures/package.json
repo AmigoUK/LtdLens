@@ -1,11 +1,14 @@
 {
   "name": "@ltdlens/fixtures",
   "private": true,
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "description": "Recorded and synthetic Companies House payloads, statically importable by both the Worker and the extension.",
   "exports": {
     ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@ltdlens/shared": "*"
   },
   "scripts": {
     "typecheck": "tsc --noEmit"

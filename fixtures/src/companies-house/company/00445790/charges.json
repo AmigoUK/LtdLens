@@ -1,0 +1,40 @@
+{
+  "etag": "a1b2c3d4e5f6",
+  "total_count": 4,
+  "satisfied_count": 3,
+  "part_satisfied_count": 0,
+  "unfiletered_count": 4,
+  "items": [
+    {
+      "charge_number": 4,
+      "charge_code": "004457900004",
+      "status": "outstanding",
+      "created_on": "2019-05-14",
+      "delivered_on": "2019-05-20",
+      "classification": {
+        "type": "charge-description",
+        "description": "A registered charge"
+      },
+      "particulars": {
+        "description": "Freehold property known as the distribution centre",
+        "contains_fixed_charge": true
+      },
+      "persons_entitled": [{ "name": "HSBC UK BANK PLC" }],
+      "links": { "self": "/company/00445790/charges/aaa111" }
+    },
+    {
+      "charge_number": 3,
+      "charge_code": "004457900003",
+      "status": "fully-satisfied",
+      "created_on": "2011-02-03",
+      "delivered_on": "2011-02-10",
+      "satisfied_on": "2018-09-30",
+      "classification": {
+        "type": "charge-description",
+        "description": "A registered charge"
+      },
+      "persons_entitled": [{ "name": "BARCLAYS BANK PLC" }],
+      "links": { "self": "/company/00445790/charges/bbb222" }
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "company_name": "DISTRESSED TRADING LIMITED",
+  "company_number": "99000001",
+  "company_status": "active",
+  "company_status_detail": "active-proposal-to-strike-off",
+  "type": "ltd",
+  "jurisdiction": "england-wales",
+  "date_of_creation": "2018-04-12",
+  "can_file": true,
+  "sic_codes": ["43999"],
+  "registered_office_address": {
+    "address_line_1": "12 Example Street",
+    "locality": "Birmingham",
+    "postal_code": "B1 1AA",
+    "country": "England"
+  },
+  "registered_office_is_in_dispute": false,
+  "undeliverable_registered_office_address": true,
+  "accounts": {
+    "accounting_reference_date": { "day": 30, "month": 4 },
+    "last_accounts": {
+      "made_up_to": "2024-04-30",
+      "period_start_on": "2023-05-01",
+      "period_end_on": "2024-04-30",
+      "type": "total-exemption-full"
+    },
+    "next_accounts": {
+      "due_on": "2026-01-31",
+      "overdue": true,
+      "period_start_on": "2024-05-01",
+      "period_end_on": "2025-04-30"
+    },
+    "next_due": "2026-01-31",
+    "next_made_up_to": "2025-04-30",
+    "overdue": true
+  },
+  "confirmation_statement": {
+    "last_made_up_to": "2025-04-26",
+    "next_due": "2026-05-10",
+    "next_made_up_to": "2026-04-26",
+    "overdue": true
+  },
+  "has_charges": true,
+  "has_insolvency_history": false,
+  "links": {
+    "self": "/company/99000001",
+    "filing_history": "/company/99000001/filing-history",
+    "officers": "/company/99000001/officers",
+    "charges": "/company/99000001/charges"
+  }
+}

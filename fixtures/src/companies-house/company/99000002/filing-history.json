@@ -1,0 +1,51 @@
+{
+  "etag": "e1e2e3e4e5e6",
+  "filing_history_status": "filing-history-available",
+  "total_count": 41,
+  "items_per_page": 25,
+  "start_index": 0,
+  "kind": "filing-history",
+  "items": [
+    {
+      "transaction_id": "OTkwMDAwMDIx",
+      "category": "insolvency",
+      "date": "2026-02-09",
+      "description": "liquidation-voluntary-appointment-of-liquidator",
+      "type": "600",
+      "pages": 2,
+      "links": { "self": "/company/99000002/filing-history/OTkwMDAwMDIx" }
+    },
+    {
+      "transaction_id": "OTkwMDAwMDIy",
+      "category": "insolvency",
+      "date": "2026-01-28",
+      "description": "liquidation-voluntary-resolution-to-wind-up",
+      "type": "LRESSP",
+      "pages": 1,
+      "links": { "self": "/company/99000002/filing-history/OTkwMDAwMDIy" }
+    },
+    {
+      "transaction_id": "OTkwMDAwMDIz",
+      "category": "change-of-name",
+      "date": "2021-03-08",
+      "description": "change-of-name-certificate-company-with-old-name-new-name",
+      "description_values": {
+        "old_name": "BRIGHT FUTURE TRADING LIMITED",
+        "new_name": "CEASED HOLDINGS LIMITED"
+      },
+      "type": "CERTNM",
+      "pages": 1,
+      "links": { "self": "/company/99000002/filing-history/OTkwMDAwMDIz" }
+    },
+    {
+      "transaction_id": "OTkwMDAwMDI0",
+      "category": "accounts",
+      "date": "2024-08-14",
+      "description": "accounts-with-accounts-type-small",
+      "description_values": { "made_up_date": "2023-12-31" },
+      "type": "AA",
+      "pages": 11,
+      "links": { "self": "/company/99000002/filing-history/OTkwMDAwMDI0" }
+    }
+  ]
+}

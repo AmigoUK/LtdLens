@@ -1,0 +1,55 @@
+{
+  "kind": "search#companies",
+  "total_results": 47,
+  "items_per_page": 20,
+  "start_index": 0,
+  "page_number": 1,
+  "items": [
+    {
+      "company_number": "00445790",
+      "title": "TESCO PLC",
+      "company_status": "active",
+      "company_type": "plc",
+      "date_of_creation": "1947-11-27",
+      "address_snippet": "Kestrel Way, Shire Park, Welwyn Garden City, AL7 1GA",
+      "address": {
+        "address_line_1": "Kestrel Way",
+        "locality": "Welwyn Garden City",
+        "postal_code": "AL7 1GA"
+      },
+      "kind": "searchresults#company",
+      "links": { "self": "/company/00445790" }
+    },
+    {
+      "company_number": "05310300",
+      "title": "TESCO PERSONAL FINANCE PLC",
+      "company_status": "active",
+      "company_type": "plc",
+      "date_of_creation": "1997-08-07",
+      "address_snippet": "2 South Gyle Crescent, Edinburgh, EH12 9FQ",
+      "kind": "searchresults#company",
+      "links": { "self": "/company/05310300" }
+    },
+    {
+      "company_number": "02988418",
+      "title": "TESCO STORES LIMITED",
+      "company_status": "active",
+      "company_type": "ltd",
+      "date_of_creation": "1994-11-08",
+      "address_snippet": "Kestrel Way, Shire Park, Welwyn Garden City, AL7 1GA",
+      "kind": "searchresults#company",
+      "links": { "self": "/company/02988418" }
+    },
+    {
+      "company_number": "03796079",
+      "title": "TESCO DOTCOM LIMITED",
+      "company_status": "dissolved",
+      "company_type": "ltd",
+      "date_of_creation": "1999-06-16",
+      "date_of_cessation": "2015-03-10",
+      "address_snippet": "Kestrel Way, Shire Park, Welwyn Garden City, AL7 1GA",
+      "kind": "searchresults#company",
+      "links": { "self": "/company/03796079" }
+    }
+  ]
+}

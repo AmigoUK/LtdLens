@@ -1,0 +1,65 @@
+{
+  "etag": "f6e5d4c3b2a1",
+  "filing_history_status": "filing-history-available",
+  "total_count": 1284,
+  "items_per_page": 25,
+  "start_index": 0,
+  "kind": "filing-history",
+  "items": [
+    {
+      "transaction_id": "MzQ1Njc4OTAx",
+      "category": "confirmation-statement",
+      "date": "2026-07-02",
+      "description": "confirmation-statement-with-no-updates",
+      "type": "CS01",
+      "pages": 3,
+      "links": { "self": "/company/00445790/filing-history/MzQ1Njc4OTAx" }
+    },
+    {
+      "transaction_id": "MzQ1Njc4OTAy",
+      "category": "accounts",
+      "date": "2026-05-18",
+      "description": "accounts-with-accounts-type-group",
+      "description_values": { "made_up_date": "2026-02-28" },
+      "type": "AA",
+      "pages": 168,
+      "links": { "self": "/company/00445790/filing-history/MzQ1Njc4OTAy" }
+    },
+    {
+      "transaction_id": "MzQ1Njc4OTAz",
+      "category": "officers",
+      "date": "2026-03-11",
+      "description": "appoint-person-director-company-with-name-date",
+      "description_values": {
+        "officer_name": "PATEL, Anika",
+        "appointment_date": "2026-03-01"
+      },
+      "type": "AP01",
+      "pages": 2,
+      "links": { "self": "/company/00445790/filing-history/MzQ1Njc4OTAz" }
+    },
+    {
+      "transaction_id": "MzQ1Njc4OTA0",
+      "category": "capital",
+      "date": "2025-11-04",
+      "description": "capital-allotment-shares",
+      "type": "SH01",
+      "pages": 4,
+      "links": { "self": "/company/00445790/filing-history/MzQ1Njc4OTA0" }
+    },
+    {
+      "transaction_id": "MzQ1Njc4OTA1",
+      "category": "address",
+      "date": "2011-04-02",
+      "description": "change-registered-office-address-company-with-date-old-address-new-address",
+      "description_values": {
+        "change_date": "2011-04-02",
+        "old_address": "Tesco House, Delamare Road, Cheshunt",
+        "new_address": "Kestrel Way, Shire Park, Welwyn Garden City"
+      },
+      "type": "AD01",
+      "pages": 1,
+      "links": { "self": "/company/00445790/filing-history/MzQ1Njc4OTA1" }
+    }
+  ]
+}

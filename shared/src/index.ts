@@ -5,7 +5,93 @@
  * no `window`, no ambient clock. Every function that needs "now" takes a `Date`;
  * every function that needs I/O takes an injected interface. ESLint enforces it.
  *
- * Populated from v0.0.2 onwards.
+ * The normalisers live here, rather than in the Worker, for one reason: the
+ * Worker aggregates for the shared-key path and the extension will aggregate for
+ * the bring-your-own-key path. Duplicated, they would drift, and the symptom of
+ * that drift is the same company showing different facts depending on a settings
+ * toggle. On a product whose entire value is trust, that is indistinguishable
+ * from dishonesty.
  */
 
+/** Bumped when the wire format changes; part of every cache key. */
 export const CONTRACT_VERSION = 1;
+
+export type {
+  ChAccounts,
+  ChAddress,
+  ChCharge,
+  ChChargeList,
+  ChCompanyLinks,
+  ChCompanyProfile,
+  ChConfirmationStatement,
+  ChDate,
+  ChFiling,
+  ChFilingHistoryList,
+  ChLastAccounts,
+  ChNextAccounts,
+  ChOfficer,
+  ChOfficerList,
+  ChPreviousCompanyName,
+  ChSearchItem,
+  ChSearchResponse,
+} from './types/companiesHouse.js';
+
+export type {
+  AccountsFacts,
+  ChargeFacts,
+  CompanySnapshot,
+  ConfirmationStatementFacts,
+  FilingSummary,
+  OfficerFacts,
+  PreviousName,
+  RegisteredOffice,
+  SnapshotSource,
+  SourceStatus,
+} from './types/snapshot.js';
+export { SNAPSHOT_SCHEMA } from './types/snapshot.js';
+
+export type { SearchHit, SearchResponse } from './types/search.js';
+
+export type { Flag, FlagEvaluation, FlagId, FlagLevel, Severity, Verdict } from './types/flags.js';
+
+export type { CalendarDate } from './normalise/dates.js';
+export {
+  compareCalendarDates,
+  daysBetween,
+  daysInMonth,
+  formatCalendarDate,
+  isWithinMonths,
+  monthsBetween,
+  parseCalendarDate,
+  toCalendarDate,
+  toUtcDate,
+} from './normalise/dates.js';
+
+export {
+  companyRecordUrl,
+  companySearchUrl,
+  isCompanyNumber,
+  normaliseCompanyNumber,
+} from './normalise/companyNumber.js';
+
+export {
+  hasChargesLink,
+  hasInsolvencyHistory,
+  normaliseAccounts,
+  normaliseAddress,
+  normaliseConfirmationStatement,
+  normalisePreviousNames,
+  normaliseRegisteredOffice,
+} from './normalise/profile.js';
+
+export { isResponsibleOfficer, normaliseOfficers } from './normalise/officers.js';
+export { normaliseCharges } from './normalise/charges.js';
+export {
+  RECENT_FILINGS_LIMIT,
+  nameChangedOn,
+  normaliseRecentFilings,
+  registeredOfficeChangedOn,
+} from './normalise/filingHistory.js';
+
+export type { SnapshotInputs, SourceResult } from './normalise/snapshot.js';
+export { UnusableProfileError, composeSnapshot, normaliseSearch } from './normalise/snapshot.js';

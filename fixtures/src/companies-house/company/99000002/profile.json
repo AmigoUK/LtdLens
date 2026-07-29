@@ -1,0 +1,58 @@
+{
+  "company_name": "CEASED HOLDINGS LIMITED",
+  "company_number": "99000002",
+  "company_status": "liquidation",
+  "type": "ltd",
+  "jurisdiction": "england-wales",
+  "date_of_creation": "2009-06-30",
+  "can_file": true,
+  "sic_codes": ["46900", "68209"],
+  "registered_office_address": {
+    "premises": "Insolvency House",
+    "address_line_1": "88 Receiver Road",
+    "locality": "Leeds",
+    "postal_code": "LS1 4AB",
+    "country": "England"
+  },
+  "registered_office_is_in_dispute": false,
+  "undeliverable_registered_office_address": false,
+  "accounts": {
+    "accounting_reference_date": { "day": 31, "month": 12 },
+    "last_accounts": {
+      "made_up_to": "2023-12-31",
+      "period_start_on": "2023-01-01",
+      "period_end_on": "2023-12-31",
+      "type": "small"
+    },
+    "next_accounts": {
+      "due_on": "2025-09-30",
+      "overdue": true,
+      "period_start_on": "2024-01-01",
+      "period_end_on": "2024-12-31"
+    },
+    "next_due": "2025-09-30",
+    "next_made_up_to": "2024-12-31",
+    "overdue": true
+  },
+  "confirmation_statement": {
+    "last_made_up_to": "2024-06-15",
+    "next_due": "2025-06-29",
+    "next_made_up_to": "2025-06-15",
+    "overdue": true
+  },
+  "previous_company_names": [
+    {
+      "name": "BRIGHT FUTURE TRADING LIMITED",
+      "effective_from": "2009-06-30",
+      "ceased_on": "2021-03-08"
+    }
+  ],
+  "has_charges": false,
+  "has_insolvency_history": true,
+  "links": {
+    "self": "/company/99000002",
+    "filing_history": "/company/99000002/filing-history",
+    "officers": "/company/99000002/officers",
+    "insolvency": "/company/99000002/insolvency"
+  }
+}
