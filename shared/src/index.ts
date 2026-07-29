@@ -95,3 +95,28 @@ export {
 
 export type { SnapshotInputs, SourceResult } from './normalise/snapshot.js';
 export { UnusableProfileError, composeSnapshot, normaliseSearch } from './normalise/snapshot.js';
+
+export type { RatePeriod } from './rates/table.js';
+export {
+  RATE_PERIODS,
+  STATUTORY_MARGIN_BP,
+  TABLE_COVERS_TO,
+  ratePeriodFor,
+  statutoryRateBp,
+} from './rates/table.js';
+
+export type { InterestInput, InterestResult, InterestWarning } from './rates/calculator.js';
+export {
+  COMPENSATION_BANDS,
+  RECOVERY_LIMIT_YEARS,
+  calculateStatutoryInterest,
+  compensationFor,
+} from './rates/calculator.js';
+
+export type { WordingInput } from './rates/wording.js';
+export {
+  buildDemandParagraph,
+  formatBritishDate,
+  formatPence,
+  formatRate,
+} from './rates/wording.js';

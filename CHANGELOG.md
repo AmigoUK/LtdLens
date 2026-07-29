@@ -9,6 +9,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _Nothing yet._
 
+## [0.0.3] — 2026-07-29
+
+### Added
+
+- Statutory late-payment interest under the Late Payment of Commercial Debts (Interest) Act 1998: the reference rate table, the calculator, and the paragraph a user pastes into a chasing email. 185 tests. No user interface — deliberately. This is the one part of LtdLens whose output goes verbatim into a demand letter, so the legal arithmetic is settled and frozen before there is any screen to report a bug against and tempt someone into tuning it.
+- The reference rate table covers every six-month period since the regime took its current form on 7 August 2002. Rates are stored as integer basis points, because 0.1% and 3.75% are not exactly representable in binary floating point and this table feeds figures into correspondence. The table was verified against two independently published tables that agree at every overlapping point, cross-checked against Bank of England Monetary Policy Committee summaries for the December 2025 and June 2026 fixings.
+- Fixed compensation per section 5A — £40, £70 or £100 by the size of the debt, charged per invoice — with tests at every band edge and a penny either side of it.
+- The demand paragraph is **always British English regardless of the interface language**. That is the point rather than a gap in the translation layer: it is addressed to a UK debtor and cites UK legislation, so a Polish-speaking owner running a company in Birmingham still sends it in English. It also shows where the rate came from, because an accounts department that can check a figure pays it and one that cannot escalates it.
+
+### Fixed
+
+- **The reference period is chosen by when interest starts to run, not by when the debt fell due.** The concept document had this a day out. Section 4(2) of the Act starts interest on the day _after_ the due date, and SI 2002/1675 article 4 selects the rate in force at the fixing "immediately before the day on which statutory interest starts to run". A debt due on 30 June therefore starts running on 1 July, falls in the July–December band and takes the 30 June rate — not the previous 31 December's. At the June 2023 boundary those two readings differ by 1.5 percentage points, in a number the user pastes into a letter. Tests pin all four boundary dates.
+- The rate is fixed for the life of the debt and does not follow later base rate movements, even across a period boundary. Each invoice therefore carries its own rate, so a multi-invoice claim is a sum of independently rated lines rather than one rate applied to a total.
+- Interest is computed at full precision and rounded once, rather than by summing a rounded daily figure. gov.uk's worked example rounds the daily amount to the nearest penny first, which understates a £1,000 debt over 50 days by about 14p; that example is illustrative, and the creditor is entitled to the arithmetic. The daily figure is still shown, because users check against it.
+
+### Changed
+
+- The calculator refuses rather than guesses. A debt whose interest starts outside the table — before August 2002, or after 31 December 2026, which is the next fixing — returns `unavailable` instead of extrapolating from the nearest rate. What the Monetary Policy Committee will do is not something a table can know, and a wrong figure in a demand letter is worse than no figure.
+- Interest running for more than six years is flagged against the Small Business Commissioner's stated recovery limit. The arithmetic is still shown in full: what is actually recoverable is the user's decision, taken with advice, not one this calculator makes for them.
+
 ## [0.0.2] — 2026-07-29
 
 ### Added
@@ -45,6 +65,7 @@ _Nothing yet._
 - **The project is named LtdLens, not SafeToTrade.** The working title collided with `SAFETOTRADE LIMITED` (Companies House 14990998), an active UK company incorporated on 10 July 2023 that operates safetotrade.com as a food-safety trustmark and holds safetotrade.uk, .co.uk and .com. That is the same semantic space — a badge asserting a business can be trusted — so the collision is not merely a domain problem: passing off is arguable without any registered trade mark, and the Chrome Web Store removes extensions on a brand owner's complaint without a hearing. LtdLens was verified clean against Companies House, the .uk/.co.uk/.com registries and general web search before adoption. `verify-workspace.mjs` fails the build if the old name reappears in a package name.
 - TypeScript is pinned to `~5.9.3` rather than the current 7.0.2. `typescript-eslint@8.65.0` declares a peer range of `typescript >=4.8.4 <6.1.0`, and no stable line supports TypeScript 7 yet. Losing type-checked lint rules — the mechanism enforcing everything described above — to gain a compiler version is the wrong trade. Revisit when typescript-eslint ships stable TypeScript 7 support.
 
-[Unreleased]: https://github.com/AmigoUK/LtdLens/compare/v0.0.2...HEAD
+[Unreleased]: https://github.com/AmigoUK/LtdLens/compare/v0.0.3...HEAD
+[0.0.3]: https://github.com/AmigoUK/LtdLens/compare/v0.0.2...v0.0.3
 [0.0.2]: https://github.com/AmigoUK/LtdLens/compare/v0.0.1...v0.0.2
 [0.0.1]: https://github.com/AmigoUK/LtdLens/releases/tag/v0.0.1

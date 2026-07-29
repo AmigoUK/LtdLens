@@ -1,7 +1,7 @@
 {
   "name": "ltdlens",
   "private": true,
-  "version": "0.0.2",
+  "version": "0.0.3",
   "type": "module",
   "license": "MIT",
   "description": "Check any UK company before you trade — risk flags from official Companies House data.",

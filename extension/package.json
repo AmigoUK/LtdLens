@@ -1,7 +1,7 @@
 {
   "name": "@ltdlens/extension",
   "private": true,
-  "version": "0.0.2",
+  "version": "0.0.3",
   "type": "module",
   "description": "LtdLens — Chrome MV3 extension. WXT reads the published manifest version from THIS file, not the repo root.",
   "scripts": {}
