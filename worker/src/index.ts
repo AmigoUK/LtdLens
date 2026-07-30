@@ -27,6 +27,9 @@ import type { Env } from './env.js';
 import { ConfigurationError, parseEnv } from './env.js';
 import { budgetTracker } from './budget.js';
 import { edgeCache, kvSnapshotStore } from './cache/store.js';
+import { readControl } from './control.js';
+import { count } from './observability/counters.js';
+import { throttle } from './security/throttle.js';
 import { error, json, preflight } from './http.js';
 import { handleCompany } from './routes/company.js';
 import { handleHealth } from './routes/health.js';
@@ -58,8 +61,33 @@ export default {
     const url = new URL(request.url);
     const now = () => new Date();
 
+    // Health and rates are answered before any of the checks below. Health must
+    // stay reachable when the service is paused — otherwise there is no way to
+    // confirm the pause took effect — and rates is a compiled-in constant that
+    // costs nothing and lets the calculator keep working through an outage.
     if (url.pathname === PATHS.health) return handleHealth(config);
     if (url.pathname === PATHS.rates) return handleRates(now());
+
+    const control = await readControl(env.SNAPSHOTS, now());
+    if (control.mode === 'off') {
+      count('control.paused');
+      return error('SERVICE_PAUSED', {
+        // The owner's own wording, verbatim. Whoever pauses the service knows
+        // why better than any message compiled in here.
+        ...(control.message === undefined ? {} : { message: control.message }),
+      });
+    }
+
+    const decision = await throttle({
+      request,
+      salt: env.IP_SALT,
+      now,
+      cache: edgeCache(),
+    });
+    if (!decision.allowed) {
+      count('throttle.rejected');
+      return error('TOO_MANY_REQUESTS', { retryAfterSeconds: decision.retryAfterSeconds });
+    }
 
     // Only honoured by the fixture upstream, and ignored entirely in production
     // because the fixture module is not in the bundle.

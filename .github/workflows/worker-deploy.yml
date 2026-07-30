@@ -1,0 +1,94 @@
+name: Deploy Worker
+
+# Manual only, never on push.
+#
+# Auto-deploying the only server component of a product whose selling point is
+# behaving well under bad conditions is not acceptable: a bad merge at one in the
+# morning would silently replace it. A manual trigger costs one click and buys the
+# certainty that somebody is watching.
+#
+# Deploy is in CI at all — rather than from the owner's laptop — because a scoped
+# token (Workers Scripts: Edit, KV: Edit, this account only) inside a protected
+# GitHub Environment is safer than a broad long-lived token sitting in a shell
+# history and ~/.wrangler/config, and because it makes deploys reproducible and
+# auditable.
+#
+# SHIPPED DISABLED. There is no Cloudflare account yet, so `enabled` defaults to
+# false and the job refuses to run. Set the CLOUDFLARE_API_TOKEN and
+# CLOUDFLARE_ACCOUNT_ID secrets in the `production` environment, then flip the
+# input. Until then this file exists so the deployment path is written down and
+# reviewed while nobody is under pressure.
+on:
+  workflow_dispatch:
+    inputs:
+      enabled:
+        description: 'Confirm the Cloudflare credentials exist and you intend to deploy'
+        type: boolean
+        default: false
+      action:
+        description: 'upload = stage a version; deploy = make it live'
+        type: choice
+        options: [upload, deploy]
+        default: upload
+
+permissions:
+  contents: read
+
+concurrency:
+  group: worker-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy to production
+    runs-on: ubuntu-latest
+    # Holds the credentials and can require a manual approval before the job runs.
+    environment: production
+    steps:
+      - name: Refuse unless explicitly confirmed
+        if: ${{ inputs.enabled != true }}
+        run: |
+          echo "::error::Deployment is disabled. There is no Cloudflare account yet."
+          echo "See docs/CREDENTIALS_SETUP.md, then re-run with 'enabled' ticked."
+          exit 1
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      # Never deploy something that has not passed the same checks as a merge —
+      # including the guard that proves no fixture data is in the bundle.
+      - run: npm run check
+
+      - name: Stage a version
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: npx wrangler versions upload --env production
+        working-directory: worker
+
+      # `versions upload` then `versions deploy`, rather than a plain `deploy`,
+      # so a rollback is one command against an already-built version instead of
+      # a rebuild under pressure.
+      - name: Make it live
+        if: ${{ inputs.action == 'deploy' }}
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: npx wrangler versions deploy --env production --yes
+        working-directory: worker
+
+      - name: Confirm production is not serving fixture data
+        if: ${{ inputs.action == 'deploy' }}
+        run: |
+          upstream=$(curl -fsS https://api.ltdlens.uk/v1/health | node -e \
+            "let d='';process.stdin.on('data',c=>d+=c).on('end',()=>process.stdout.write(JSON.parse(d).upstream))")
+          echo "Upstream reports: $upstream"
+          if [ "$upstream" != "live" ]; then
+            echo "::error::Production is not using the live Companies House API."
+            exit 1
+          fi

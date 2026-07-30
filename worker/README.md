@@ -79,6 +79,56 @@ Degrading **depth** before **availability** matters: in brownout a report still 
 
 The budget tracker is isolate-scoped, so a 429 locks out one isolate for the window. State deliberately does not live in KV — a write per rate-limit observation would spend the entire free write budget on telemetry about the budget.
 
+## The kill switch
+
+If Companies House ever objects to the traffic, the alternative to this would be
+publishing a new extension build and waiting days for review while the objection
+stands. Instead:
+
+```bash
+echo '{"mode":"off","message":"Paused while we sort something out."}' \
+  | wrangler kv key put --binding SNAPSHOTS control:v1 --env production
+
+# Optionally auto-expiring, so a forgotten pause is not a permanent outage:
+echo '{"mode":"off","until":"2026-08-01T09:00:00Z"}' \
+  | wrangler kv key put --binding SNAPSHOTS control:v1 --env production
+
+# Resume:
+wrangler kv key delete --binding SNAPSHOTS control:v1 --env production
+```
+
+Takes effect within a minute — reads use `cacheTtl: 60`, which is what makes the
+switch effectively free against the read budget. `/v1/health` and
+`/v1/rates/late-payment` stay reachable while paused: the first so you can
+confirm the pause took effect, the second so the interest calculator keeps
+working. The paused message is shown to users verbatim.
+
+It fails towards "on". A KV error, a malformed value or an expiry that has passed
+all resolve to the service running, because the switch is for stopping traffic
+deliberately rather than by accident.
+
+## Throttling
+
+40 requests per client per minute, sized so a bookkeeper running fifty checks in
+an afternoon never notices while a script in a loop does.
+
+The client identifier is a **truncated HMAC over a secret salt plus the current
+UTC date**. The address is never stored, never logged, and never a key on its own,
+so the value is not reversible and it rotates at midnight — nobody can be followed
+across days even by whoever holds the salt. Reading `CF-Connecting-IP` anywhere
+outside `src/security/throttle.ts` is a lint error, and CI greps for it as well,
+because a lint rule can be disabled inline.
+
+Counters live in the Cache API rather than KV: a rate-limit counter in KV would be
+one write per request, which is the whole free write budget spent defending the
+free write budget. Cache entries are colo-local, so a determined client could get
+one bucket per colo. That is accepted — the point is to stop a runaway script, and
+the Companies House governor is the real backstop.
+
+Throttling fails open when the salt is missing. A missing salt is a configuration
+problem, and denying every request over it would turn a misconfiguration into an
+outage.
+
 ## Deploying
 
 Everything up to here works with no account. Deployment does not — see `docs/CREDENTIALS_SETUP.md`. In outline:

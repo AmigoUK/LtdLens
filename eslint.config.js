@@ -98,7 +98,24 @@ export default tseslint.config(
     languageOptions: { globals: globals.serviceworker },
     rules: {
       'no-console': 'error',
+      // Reading a client IP is permitted in exactly one module. One careless
+      // read in a log line would falsify the central claim in PRIVACY.md, so
+      // this is a lint error rather than a review convention. CI greps for it
+      // as well, because a lint rule can be disabled inline.
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'Literal[value=/CF-Connecting-IP/i]',
+          message:
+            'Client IPs may only be read in worker/src/security/throttle.ts, and only as a salted, daily-rotating hash.',
+        },
+      ],
     },
+  },
+  {
+    // The one module permitted to read a client address.
+    files: ['worker/src/security/throttle.ts'],
+    rules: { 'no-restricted-syntax': 'off' },
   },
   {
     // The one module permitted to emit anything, and only aggregate counters.

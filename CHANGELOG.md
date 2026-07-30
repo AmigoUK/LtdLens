@@ -9,6 +9,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _Nothing yet._
 
+## [0.1.1] — 2026-07-30
+
+### Added
+
+- **The kill switch.** A `control:v1` key in KV, read once per request with `cacheTtl: 60`, lets the owner pause the lookup service in half a minute with a single `wrangler kv key put` — no deployment, no store update, and the paused message is the owner's own wording shown verbatim. The alternative, if Companies House ever objects to the traffic, would be to publish a new extension build and wait days for review while the objection stands. That asymmetry is the whole reason it exists, and it is not in the original concept document. It fails towards "on": a KV error, a malformed value, or an expiry that has passed all resolve to the service running, because the switch is for stopping traffic deliberately rather than by accident.
+- **Per-client throttling**, sized so a bookkeeper running fifty checks in an afternoon never notices while a script in a loop does. Counters live in the Cache API rather than KV — a rate-limit counter in KV would be one write per request, which is the entire free write budget spent defending the free write budget.
+- `worker/src/observability/counters.ts`: the only module permitted to emit anything, and only aggregate counts. It exists so that the shape of what may be counted is decided now, calmly, rather than improvised at three in the morning into a `console.log(request.url)`. Even these are off by default, since `observability.enabled` is false everywhere.
+- `.github/workflows/worker-deploy.yml`, manual only and **shipped disabled** because there is no Cloudflare account yet. It stages a version and then makes it live as separate steps, so a rollback is one command against an already-built version rather than a rebuild under pressure, and it verifies `/v1/health` reports the live upstream afterwards. Deploying from CI with a scoped token in a protected environment is safer than a broad long-lived token in a shell history; deploying on push is not acceptable at all for the only server component of a product that sells reliability under bad conditions.
+
+### Changed
+
+- Reading a client IP is now a **lint error everywhere except one module**, verified against a probe file rather than assumed. CI greps for it too, because a lint rule can be disabled inline. The address is never stored, never logged and never a key on its own: it becomes a truncated HMAC over a secret salt **plus the current UTC date**, so the identifier is not reversible and rotates at midnight — nobody can be followed across days even by whoever holds the salt.
+- Health and rates are answered before the kill switch and the throttle. Health must stay reachable while the service is paused, or there is no way to confirm the pause took effect; rates is a compiled-in constant, so the interest calculator keeps working through any outage. That is the degradation promise made concrete rather than asserted.
+
+### Fixed
+
+- The client-identity hash read the clock directly, breaking this project's own rule that anything needing "now" takes it as a parameter. It was not bookkeeping: the daily rotation could not be tested at all, which made a privacy guarantee an unverified claim in a comment. The date is now injected, and there is a test that exhausts a client's allowance before midnight and shows the same address treated as a new client after it.
+
 ## [0.1.0] — 2026-07-30
 
 ### Added
@@ -103,7 +121,8 @@ _Nothing yet._
 - **The project is named LtdLens, not SafeToTrade.** The working title collided with `SAFETOTRADE LIMITED` (Companies House 14990998), an active UK company incorporated on 10 July 2023 that operates safetotrade.com as a food-safety trustmark and holds safetotrade.uk, .co.uk and .com. That is the same semantic space — a badge asserting a business can be trusted — so the collision is not merely a domain problem: passing off is arguable without any registered trade mark, and the Chrome Web Store removes extensions on a brand owner's complaint without a hearing. LtdLens was verified clean against Companies House, the .uk/.co.uk/.com registries and general web search before adoption. `verify-workspace.mjs` fails the build if the old name reappears in a package name.
 - TypeScript is pinned to `~5.9.3` rather than the current 7.0.2. `typescript-eslint@8.65.0` declares a peer range of `typescript >=4.8.4 <6.1.0`, and no stable line supports TypeScript 7 yet. Losing type-checked lint rules — the mechanism enforcing everything described above — to gain a compiler version is the wrong trade. Revisit when typescript-eslint ships stable TypeScript 7 support.
 
-[Unreleased]: https://github.com/AmigoUK/LtdLens/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/AmigoUK/LtdLens/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/AmigoUK/LtdLens/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/AmigoUK/LtdLens/compare/v0.0.4...v0.1.0
 [0.0.4]: https://github.com/AmigoUK/LtdLens/compare/v0.0.3...v0.0.4
 [0.0.3]: https://github.com/AmigoUK/LtdLens/compare/v0.0.2...v0.0.3

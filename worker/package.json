@@ -1,7 +1,7 @@
 {
   "name": "@ltdlens/worker",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "description": "Caching proxy in front of the Companies House public data API, so users never need their own key.",
   "dependencies": {

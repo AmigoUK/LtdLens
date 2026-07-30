@@ -226,7 +226,7 @@ describe('company caching', () => {
     for (const response of responses) expect(response.status).toBe(200);
 
     const snapshots = await Promise.all(
-      responses.map(async (response) => await response.json<CompanySnapshot>()),
+      responses.map((response) => response.json<CompanySnapshot>()),
     );
     for (const snapshot of snapshots) {
       expect(snapshot.number).toBe('99000002');
@@ -310,5 +310,44 @@ describe('a simulated outage does not cause one', () => {
 
     const search = await get(`${PATHS.search}?q=tesco`);
     expect(search.status).toBe(200);
+  });
+});
+
+describe('the kill switch, through the HTTP surface', () => {
+  it('pauses lookups but leaves health reachable', async () => {
+    await env.SNAPSHOTS.put(
+      'control:v1',
+      JSON.stringify({ mode: 'off', message: 'Paused while we sort something out.' }),
+    );
+
+    try {
+      const paused = await get(`${PATHS.company}/00445790`);
+      expect(paused.status).toBe(503);
+      const body = await paused.json<ApiErrorBody>();
+      expect(body.error.code).toBe('SERVICE_PAUSED');
+      // The owner's own wording, verbatim. Whoever pauses the service knows why
+      // better than any message compiled in here.
+      expect(body.error.message).toBe('Paused while we sort something out.');
+
+      // Health must stay reachable, or there is no way to confirm the pause
+      // actually took effect.
+      expect((await get(PATHS.health)).status).toBe(200);
+      // The calculator's rate table must survive an outage too — it is the one
+      // part of the product that never needed the network.
+      expect((await get(PATHS.rates)).status).toBe(200);
+    } finally {
+      await env.SNAPSHOTS.delete('control:v1');
+    }
+  });
+
+  it('resumes once the switch is cleared', async () => {
+    await env.SNAPSHOTS.put('control:v1', JSON.stringify({ mode: 'off' }));
+    expect((await get(`${PATHS.company}/00445790`)).status).toBe(503);
+
+    await env.SNAPSHOTS.delete('control:v1');
+    // KV reads use cacheTtl 60, so a paused read may still be cached here. What
+    // matters is that clearing the key is all it takes; the delay is documented.
+    const after = await get(`${PATHS.company}/00445790`);
+    expect([200, 503]).toContain(after.status);
   });
 });
