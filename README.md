@@ -4,7 +4,9 @@
 
 Free. No sign-up. No API key. No tracking.
 
-> **Status: in development.** Nothing is published yet. See [CHANGELOG.md](CHANGELOG.md) for what exists today.
+> **Status: in development at v0.2.0.** Nothing is published yet. See
+> [docs/STATUS.md](docs/STATUS.md) for where the project stands, what is
+> deliberately not built, and what is waiting on credentials.
 
 ## What it tells you
 
