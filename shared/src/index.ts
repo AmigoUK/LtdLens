@@ -96,6 +96,18 @@ export {
 export type { SnapshotInputs, SourceResult } from './normalise/snapshot.js';
 export { UnusableProfileError, composeSnapshot, normaliseSearch } from './normalise/snapshot.js';
 
+export type { ApiErrorBody, ApiErrorCode } from './api/errors.js';
+export { ERROR_MESSAGE, ERROR_STATUS, isApiErrorBody } from './api/errors.js';
+
+export type {
+  CompanyResponseBody,
+  Freshness,
+  HealthResponseBody,
+  RatesResponseBody,
+  SearchResponseBody,
+} from './api/contract.js';
+export { API_VERSION, HEADERS, PATHS } from './api/contract.js';
+
 export type { RuleDefinition, RuleOutcome } from './flags/rules.js';
 export { LEVEL_ORDER, RULES, RULES_BY_ID, RULESET_VERSION } from './flags/rules.js';
 export {

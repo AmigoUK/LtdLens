@@ -61,3 +61,18 @@ jobs:
             echo "::error::A non-empty CH_API_KEY appears in a tracked file."
             exit 1
           fi
+
+      - name: Request logging stays off in every environment
+        run: |
+          # Wrangler env blocks inherit nothing and Cloudflare's default is ON,
+          # so a missing block silently retains request URLs for three days.
+          blocks=$(grep -c '"observability"' worker/wrangler.jsonc)
+          enabled=$(grep -c '"enabled": false' worker/wrangler.jsonc)
+          if [ "$blocks" -ne 3 ] || [ "$enabled" -ne 3 ]; then
+            echo "::error::Expected 3 observability blocks all disabled; found $blocks blocks, $enabled disabled."
+            exit 1
+          fi
+          if grep -qE '"(logpush|tail_consumers)"' worker/wrangler.jsonc; then
+            echo "::error::logpush or tail_consumers configured — both would create a request log."
+            exit 1
+          fi

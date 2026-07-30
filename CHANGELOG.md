@@ -9,6 +9,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _Nothing yet._
 
+## [0.1.0] — 2026-07-30
+
+### Added
+
+- The Cloudflare Worker: router, upstream seam, two cache tiers, request coalescing, a three-state Companies House budget governor, and the error contract. `GET /v1/company/{number}`, `/v1/search`, `/v1/rates/late-payment` and `/v1/health`. 43 tests in real workerd with real KV and a real Cache API — not mocks, because the cache tiers and `waitUntil` are exactly the parts most likely to behave differently in production.
+- **The whole system now runs with no credentials at all.** `wrangler dev` starts in local mode with KV simulated on disk, and with no API key the Worker replays recorded fixtures through the real normalisation, caching and governor code. Every branch of the degradation ladder is reachable from `curl` via `X-Fixture-Scenario: 429|500|timeout|partial|not-found`, so the failure paths are exercised now rather than discovered in production.
+- `scripts/verify-no-fixtures.mjs`, wired into `npm run check`: builds the production bundle and fails if any fixture data survives. Verified to catch a real regression, not just to pass.
+- CI now counts the `observability` blocks in `wrangler.jsonc` and fails unless all three are present and disabled. Wrangler environment blocks inherit nothing and Cloudflare's default is on, so a missing block silently retains request URLs for three days.
+- `worker/README.md`: running without credentials, the endpoint contract, the cache tiers, the governor states, and an explicit list of what must never be logged.
+
+### Fixed
+
+- **Fixtures were shipping in the production bundle.** `__FIXTURES_ENABLED__` was read through a helper containing a `typeof` guard, which is opaque to esbuild, so the branch stayed live and roughly forty kilobytes of invented company data went into the bundle. No test caught it — every test runs with fixtures deliberately enabled — and it was only found by grepping the built output. The identifier is now read directly at the branch, `fixtures` and `shared` declare `sideEffects: false`, and the production bundle went from 72 KiB to 48 KiB. What was at stake was not size: a production Worker carrying fixture data could, if another guard failed, serve a report about a company that does not exist to somebody deciding whether to extend it credit.
+- **The write-on-second-miss policy was self-defeating.** The "seen once" marker was to be stored in KV, but a marker in KV is itself a write, so a company looked up once would have cost one write instead of one and a company looked up twice would have cost two instead of one — strictly worse than no policy. The marker now lives in the unmetered edge cache, so a one-off lookup costs zero KV writes. This matters because the free tier's 1,000 writes a day, not the request count, is the binding constraint, and exhausting it fails in the worst direction: writes stop, nothing persists, every colo pays full upstream cost, and the Companies House limit — the one that gets a key banned — comes into play.
+- A forced fixture scenario now scopes the cache namespace, so a degraded response cannot be served to the next ordinary request or vice versa. In production the scenario is always `ok` and the namespace is unchanged.
+- The company route distinguishes "no such company" from "we could not reach the register". They are different facts and they need different wording; conflating them would tell a user a real company does not exist.
+
+### Changed
+
+- The budget governor has three states rather than two. A single cutoff wastes the budget between the cutoff and zero and produces a cliff where the service works perfectly and then not at all. In brownout the optional sources are dropped instead, so a cold check costs one upstream call rather than four and a report still arrives — honestly marked `partial`, which the flag engine already knows how to represent as "not checked" rather than "clear". A 429 is never retried: Companies House may ban an application that appears to work around the limit, and a retry is indistinguishable from an attempt.
+- The coalescing test was replaced. It went through `SELF.fetch` and passed roughly two runs in three, because concurrent requests are not guaranteed to share an isolate and so may not share the promise map. A test that is right most of the time is worse than no test, since a real regression hides in the noise. Coalescing is now tested directly with a counter that cannot lie about how many times the work ran — including the case everyone gets wrong first, where a rejected promise left in the map turns one upstream blip into a permanent outage for that company.
+- `@cloudflare/vitest-pool-workers` 0.19 replaced `defineWorkersConfig` with a Vite plugin. Noted in the config file so nobody restores the older form that appears in most documentation.
+
 ## [0.0.4] — 2026-07-29
 
 ### Added
@@ -80,7 +103,8 @@ _Nothing yet._
 - **The project is named LtdLens, not SafeToTrade.** The working title collided with `SAFETOTRADE LIMITED` (Companies House 14990998), an active UK company incorporated on 10 July 2023 that operates safetotrade.com as a food-safety trustmark and holds safetotrade.uk, .co.uk and .com. That is the same semantic space — a badge asserting a business can be trusted — so the collision is not merely a domain problem: passing off is arguable without any registered trade mark, and the Chrome Web Store removes extensions on a brand owner's complaint without a hearing. LtdLens was verified clean against Companies House, the .uk/.co.uk/.com registries and general web search before adoption. `verify-workspace.mjs` fails the build if the old name reappears in a package name.
 - TypeScript is pinned to `~5.9.3` rather than the current 7.0.2. `typescript-eslint@8.65.0` declares a peer range of `typescript >=4.8.4 <6.1.0`, and no stable line supports TypeScript 7 yet. Losing type-checked lint rules — the mechanism enforcing everything described above — to gain a compiler version is the wrong trade. Revisit when typescript-eslint ships stable TypeScript 7 support.
 
-[Unreleased]: https://github.com/AmigoUK/LtdLens/compare/v0.0.4...HEAD
+[Unreleased]: https://github.com/AmigoUK/LtdLens/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/AmigoUK/LtdLens/compare/v0.0.4...v0.1.0
 [0.0.4]: https://github.com/AmigoUK/LtdLens/compare/v0.0.3...v0.0.4
 [0.0.3]: https://github.com/AmigoUK/LtdLens/compare/v0.0.2...v0.0.3
 [0.0.2]: https://github.com/AmigoUK/LtdLens/compare/v0.0.1...v0.0.2

@@ -1,0 +1,16 @@
+# Copy to .dev.vars (gitignored) to develop against the live Companies House API.
+#
+# Leave CH_API_KEY empty or absent and the Worker replays fixtures instead, which
+# needs no credentials and no Cloudflare account. That is the normal way to work
+# on this.
+#
+# When you do get a key: leave the IP restriction and the JavaScript domain
+# restriction EMPTY on the Companies House developer hub. A Worker's egress
+# address is Cloudflare's and it varies, so an IP restriction will work perfectly
+# in local development and silently 403 in production. It is the single most
+# likely setup mistake.
+CH_API_KEY=
+
+# 32 random bytes, used to salt the per-client throttle hash. Arrives with the
+# throttle in v0.1.1.
+IP_SALT=

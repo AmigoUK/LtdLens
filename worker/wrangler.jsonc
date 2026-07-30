@@ -1,0 +1,61 @@
+{
+  // JSONC rather than TOML: the schema reference gives editor validation on a
+  // file touched twice a year, and it deletes the whole class of nested-table
+  // mistakes that `[[env.production.kv_namespaces]]` invites.
+  "$schema": "./node_modules/wrangler/config-schema.json",
+
+  "name": "ltdlens-api",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-07-01",
+  "workers_dev": false,
+
+  // MUST stay false, and MUST be repeated in every env block below.
+  // Wrangler env blocks inherit nothing, and Cloudflare's default is ON —
+  // leaving it out silently retains request URLs for three days, which would
+  // make the privacy claim in PRIVACY.md false. CI asserts this.
+  "observability": { "enabled": false },
+
+  "vars": {
+    "ENVIRONMENT": "development",
+    "SNAPSHOT_SCHEMA": "v1",
+  },
+
+  // Fixture upstream is compiled in for development only. Production sets this
+  // to false so esbuild tree-shakes the fixture package out of the bundle
+  // entirely; CI greps the built output for the marker string to prove it.
+  "define": {
+    "__FIXTURES_ENABLED__": "true",
+  },
+
+  "kv_namespaces": [
+    {
+      "binding": "SNAPSHOTS",
+      // Placeholders until the Cloudflare account exists. `wrangler dev` runs
+      // in local mode and simulates KV in .wrangler/state, so these are not
+      // needed to develop or test.
+      "id": "local-development-placeholder",
+      "preview_id": "local-development-placeholder",
+    },
+  ],
+
+  "env": {
+    "staging": {
+      "vars": { "ENVIRONMENT": "staging", "SNAPSHOT_SCHEMA": "v1" },
+      "define": { "__FIXTURES_ENABLED__": "true" },
+      "observability": { "enabled": false },
+      "kv_namespaces": [{ "binding": "SNAPSHOTS", "id": "staging-placeholder" }],
+      "routes": [{ "pattern": "api-staging.ltdlens.uk", "custom_domain": true }],
+    },
+
+    "production": {
+      "vars": { "ENVIRONMENT": "production", "SNAPSHOT_SCHEMA": "v1" },
+      "define": { "__FIXTURES_ENABLED__": "false" },
+      "observability": { "enabled": false },
+      "kv_namespaces": [{ "binding": "SNAPSHOTS", "id": "production-placeholder" }],
+      // The custom domain is load-bearing, not cosmetic: the Cache API is
+      // documented not to function on workers.dev, and without it the L1 tier
+      // disappears and KV write pressure roughly triples.
+      "routes": [{ "pattern": "api.ltdlens.uk", "custom_domain": true }],
+    },
+  },
+}
