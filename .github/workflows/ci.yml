@@ -27,6 +27,27 @@ jobs:
       - name: Audit
         run: npm audit --audit-level=high
 
+  e2e:
+    name: End-to-end in real Chromium
+    runs-on: ubuntu-latest
+    # Separate job because it needs a browser download and a virtual display. It
+    # catches the class of problem no unit test can: whether the manifest actually
+    # loads, whether the surfaces render, and whether the extension contacts any
+    # host it should not — which is the only mechanical check on the zero-telemetry
+    # claim.
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+        working-directory: extension
+      - run: npm run build -w extension
+      - run: xvfb-run -a node extension/scripts/e2e.mjs
+
   privacy-guard:
     name: Privacy guard
     runs-on: ubuntu-latest

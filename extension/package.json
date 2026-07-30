@@ -1,8 +1,31 @@
 {
   "name": "@ltdlens/extension",
   "private": true,
-  "version": "0.1.1",
+  "version": "0.2.0",
   "type": "module",
   "description": "LtdLens — Chrome MV3 extension. WXT reads the published manifest version from THIS file, not the repo root.",
-  "scripts": {}
+  "scripts": {
+    "dev": "wxt",
+    "build": "wxt build",
+    "zip": "wxt zip",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "icons": "node scripts/make-icons.mjs",
+    "postinstall": "wxt prepare",
+    "e2e": "xvfb-run -a node scripts/e2e.mjs"
+  },
+  "dependencies": {
+    "@ltdlens/fixtures": "*",
+    "@ltdlens/shared": "*",
+    "preact": "^10.29.7"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "^2.10.6",
+    "@types/chrome": "^0.2.2",
+    "@types/node": "^22.20.1",
+    "playwright": "^1.62.0",
+    "vitest": "^4.1.10",
+    "wxt": "^0.21.2"
+  }
 }

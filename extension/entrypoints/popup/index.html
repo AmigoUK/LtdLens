@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LtdLens</title>
+    <!--
+      Applies an explicit theme choice before the bundle loads. Without this a user
+      who has chosen light on a dark system gets a dark flash every time this page
+      opens, because chrome.storage is asynchronous and the first paint is not.
+      The key is duplicated from platform/theme.ts by necessity — this script has
+      to run before any module, so it cannot import.
+    -->
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem('ltdlens.theme');
+          if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+        } catch (e) {
+          /* storage denied; the media query still applies */
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="./main.tsx"></script>
+  </body>
+</html>

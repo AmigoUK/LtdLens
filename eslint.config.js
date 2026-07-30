@@ -84,6 +84,16 @@ export default tseslint.config(
     },
   },
 
+  // Playwright scripts genuinely mix two runtimes: they run in Node, but the code
+  // inside `page.evaluate` runs in the browser. Both sets of globals are legitimate
+  // here, and there is no way to lint them apart.
+  {
+    files: ['extension/scripts/**/*.mjs'],
+    languageOptions: {
+      globals: { ...globals.node, ...globals.browser, chrome: 'readonly' },
+    },
+  },
+
   // The purity boundary.
   {
     files: ['shared/src/**/*.ts', 'extension/lib/**/*.ts', 'extension/lib/**/*.tsx'],
