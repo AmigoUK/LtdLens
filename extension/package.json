@@ -18,7 +18,7 @@
   "dependencies": {
     "@ltdlens/fixtures": "*",
     "@ltdlens/shared": "*",
-    "preact": "^10.29.7"
+    "preact": "^10.29.8"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.10.6",
